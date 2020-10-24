@@ -1,0 +1,5 @@
+# Project exclude paths
+/bootstrap/target/
+/common/target/
+/datasources/target/
+/gui/target/
