@@ -40,7 +40,8 @@ public class LineNumberBorder extends AbstractBorder {
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         // 获得当前剪贴区域的边界矩形。
         JTextPane textPane = (JTextPane) c;
-        int maxLen = lineNumberWidth(textPane);
+        int maxLineWidth = lineNumberWidth(textPane);
+        int lineCount = textPane.getDocument().getDefaultRootElement().getElementCount();
         java.awt.Rectangle clip = g.getClipBounds();
         FontMetrics fm = g.getFontMetrics();
         int fontHeight = fm.getHeight();
@@ -67,9 +68,12 @@ public class LineNumberBorder extends AbstractBorder {
         g.setColor(Color.blue);
         // 绘制行号
         while (ybaseline < yend) {
+            if (startingLineNumber > lineCount){
+                break;
+            }
             String label = padLabel(startingLineNumber, 0, true);
             int curLen = fontMetrics.stringWidth(label);
-            g.drawString(label, maxLen - curLen, ybaseline);
+            g.drawString(label, maxLineWidth - curLen, ybaseline);
             ybaseline += fontHeight;
             startingLineNumber++;
         }
