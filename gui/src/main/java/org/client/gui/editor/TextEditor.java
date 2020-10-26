@@ -97,4 +97,14 @@ public class TextEditor extends JPanel{
     public String getTitle() {
         return title;
     }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("main");
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.setSize(200, 100);
+        frame.add(new TextEditor("main"), BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
 }

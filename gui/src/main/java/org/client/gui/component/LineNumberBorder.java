@@ -20,7 +20,9 @@ public class LineNumberBorder extends AbstractBorder {
     public Insets getBorderInsets(Component c, Insets insets) {
         if (c instanceof JTextPane) {
             //这里设置行号左边边距
-            insets.left = 20;
+            JTextPane textPane = (JTextPane) c;
+            int maxLen = lineNumberWidth(textPane);
+            insets.left = maxLen;
         }
 
         return insets;
@@ -37,6 +39,8 @@ public class LineNumberBorder extends AbstractBorder {
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         // 获得当前剪贴区域的边界矩形。
+        JTextPane textPane = (JTextPane) c;
+        int maxLen = lineNumberWidth(textPane);
         java.awt.Rectangle clip = g.getClipBounds();
         FontMetrics fm = g.getFontMetrics();
         int fontHeight = fm.getHeight();
@@ -57,21 +61,24 @@ public class LineNumberBorder extends AbstractBorder {
         if (yend > (y + height)) {
             yend = y + height;
         }
+
+        FontMetrics fontMetrics = textPane.getFontMetrics(textPane.getFont());
+
         g.setColor(Color.blue);
         // 绘制行号
         while (ybaseline < yend) {
             String label = padLabel(startingLineNumber, 0, true);
-
-            g.drawString(label, 0, ybaseline);
+            int curLen = fontMetrics.stringWidth(label);
+            g.drawString(label, maxLen - curLen, ybaseline);
             ybaseline += fontHeight;
             startingLineNumber++;
         }
     }
 
     // 寻找适合的数字宽度
-    private int lineNumberWidth(JTextArea jta) {
-        int lineCount = Math.max(jta.getRows(), jta.getLineCount());
-        return jta.getFontMetrics(jta.getFont()).stringWidth(lineCount + " ");
+    private int lineNumberWidth(JTextPane textPane) {
+        int lineCount = textPane.getDocument().getDefaultRootElement().getElementCount();
+        return textPane.getFontMetrics(textPane.getFont()).stringWidth(lineCount + " ");
     }
 
     private String padLabel(int lineNumber, int length, boolean addSpace) {
