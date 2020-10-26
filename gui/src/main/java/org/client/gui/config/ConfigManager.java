@@ -19,7 +19,7 @@ public class ConfigManager {
 
 
     public void loadConfig() throws IOException {
-        File file = new File(configPath);
+        File file = new File(DataManager.getDataPath(configPath));
         if (file.exists()){
             InputStream inputStream = new FileInputStream(file);
             properties = new Properties();
@@ -27,7 +27,7 @@ public class ConfigManager {
             inputStream.close();
         }
 
-        File jsonFile = new File(userPreferencePath);
+        File jsonFile = new File(DataManager.getDataPath(userPreferencePath));
         if (jsonFile.exists()){
             InputStream jsonInputStream = new FileInputStream(jsonFile);
             userPreference = JSON.parseObject(jsonInputStream, UserPreference.class);
@@ -46,7 +46,7 @@ public class ConfigManager {
     public void setUserPreference(UserPreference userPreference) {
         this.userPreference = userPreference;
         try{
-            File file = new File(userPreferencePath);
+            File file = new File(DataManager.getDataPath(userPreferencePath));
             if (file.exists()){
                 file.createNewFile();
             }
