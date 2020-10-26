@@ -1,6 +1,7 @@
 package org.client.gui.editor;
 
 import org.client.common.StringUtils;
+import org.client.gui.component.LineNumberBorder;
 import org.client.gui.editor.parser.IParser;
 import org.client.gui.editor.parser.SqlParser;
 import org.client.gui.editor.parser.TextNode;
@@ -48,7 +49,7 @@ public class TextEditor extends JPanel{
             }
         });
         setSize(200,300);
-
+        textPane.setBorder(new LineNumberBorder());
     }
 
     public void addUpdateListener(UpdateListener listener){
