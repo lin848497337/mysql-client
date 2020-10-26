@@ -1,6 +1,8 @@
 package org.client.gui.editor;
 
+import javafx.scene.input.KeyCode;
 import org.client.common.StringUtils;
+import org.client.gui.component.AutoTipsContextDialog;
 import org.client.gui.component.LineNumberBorder;
 import org.client.gui.editor.parser.IParser;
 import org.client.gui.editor.parser.SqlParser;
@@ -24,21 +26,33 @@ public class TextEditor extends JPanel{
 
     private UpdateListener updateListener;
 
+    private AutoTipsContextDialog dialog;
+
     public TextEditor(String title){
         setName(title);
         this.title = title;
         setLayout(new BorderLayout(0,0));
         textPane = new JTextPane();
         textPane.setDocument(new DefaultStyledDocument());
+        dialog =  new AutoTipsContextDialog(textPane);
         add(new JScrollPane(textPane), BorderLayout.CENTER);
         textPane.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.isActionKey()){
+
+                if ( e.getKeyCode() == KeyEvent.VK_DOWN && dialog.isVisible()){
+                    dialog.selectFirst();
                     return;
                 }
+
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && dialog.isVisible()){
+                    dialog.triggerSelect();
+                }
+
                 try {
                     syntaxParse();
+                    dialog.input();
+                    textPane.requestFocus();
                     if (updateListener != null){
                         updateListener.onUpdate();
                     }
@@ -51,6 +65,7 @@ public class TextEditor extends JPanel{
         setSize(200,300);
         textPane.setBorder(new LineNumberBorder());
     }
+
 
     public void addUpdateListener(UpdateListener listener){
         this.updateListener = listener;
